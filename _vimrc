@@ -1,18 +1,24 @@
+" Vim with all enhancements
 source $VIMRUNTIME/vimrc_example.vim
-source $VIMRUNTIME/mswin.vim
-behave mswin
 
-set diffexpr=MyDiff()
+" Use the internal diff if available.
+" Otherwise use the special 'diffexpr' for Windows.
+if &diffopt !~# 'internal'
+  set diffexpr=MyDiff()
+endif
 function MyDiff()
   let opt = '-a --binary '
   if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
   if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
   let arg1 = v:fname_in
   if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg1 = substitute(arg1, '!', '\!', 'g')
   let arg2 = v:fname_new
   if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg2 = substitute(arg2, '!', '\!', 'g')
   let arg3 = v:fname_out
   if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let arg3 = substitute(arg3, '!', '\!', 'g')
   if $VIMRUNTIME =~ ' '
     if &sh =~ '\<cmd'
       if empty(&shellxquote)
@@ -26,6 +32,7 @@ function MyDiff()
   else
     let cmd = $VIMRUNTIME . '\diff'
   endif
+  let cmd = substitute(cmd, '!', '\!', 'g')
   silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3
   if exists('l:shxq_sav')
     let &shellxquote=l:shxq_sav
@@ -47,6 +54,7 @@ set guifont=Consolas:h13:b:cDEFAULT
 set t_Co=256
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
+"set pyxversion=3
 
 set fdm=indent                  " 启用indent折叠模式
 set nofoldenable                " 先关闭折叠
@@ -122,11 +130,11 @@ endif
 " 插件设置
 " ===========================================================
 " vim_plug插件管理器配置
-call plug#begin('~/.vim/bundle/') " 开始并指定插件存放目录
+call plug#begin('$VIMFILES/bundle/') " 开始并指定插件存放目录
 
 " 主题颜色
 Plug 'morhetz/gruvbox'
-set rtp+=~/.vim/bundle/gruvbox
+set rtp+=$VIMFILES/bundle/gruvbox
 colorscheme gruvbox
 set background=dark
 
@@ -138,6 +146,19 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme = 'gruvbox'
 let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
 "set ambiwidth=double " 使用全角标点
+
+" 自动生产tags
+Plug 'ludovicchabant/vim-gutentags'
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.project', '.pro']
+let g:gutentags_ctags_tagfile = '.tags'
+let s:vim_tags = expand('$HOME/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+endif
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
 " 函数符号
 Plug 'majutsushi/tagbar'
@@ -178,19 +199,19 @@ Plug 'jiangmiao/auto-pairs'
 
 " 自动补全2
 if has('nvim')
-    Plug 'Shougo/deoplete.nvim'
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 else
     Plug 'Shougo/deoplete.nvim'
     Plug 'roxma/nvim-yarp'             " vim8需要
     Plug 'roxma/vim-hug-neovim-rpc'    " vim8需要
     Plug 'Shougo/deoplete-clangx'
-	Plug 'Shougo/neoinclude.vim'
+    Plug 'Shougo/neoinclude.vim'
     Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode:go get -u github.com/stamblerre/gocode
     "Plug 'wokalski/autocomplete-flow'
     Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 endif
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#go#gocode_binary = '/home/lifan/go/bin/gocode'
+let g:deoplete#sources#go#gocode_binary = '$HOME/go/bin/gocode'
 set completeopt-=preview
 autocmd CompleteDone * silent! pclose!
 " 添加ternjs补全的文件类型
@@ -202,6 +223,11 @@ let g:deoplete#sources#ternjs#filetypes = [
                 \ 'htm',
                 \ '...'
                 \ ]
+
+" nvim-yarp要求python3的路径
+if MySys() == "windows"                
+    let g:python3_host_prog='D:/Soft/Python38/python.exe'
+endif
 
 " 片段补全
 Plug 'Shougo/neosnippet.vim'
@@ -255,7 +281,11 @@ map <F4> :A<CR>
 Plug 'chrisbra/Recover.vim'
 
 " 搜索增强
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+if MySys() == "windows"
+    Plug 'Yggdroot/LeaderF', { 'do': '\install.bat' }
+elseif MySys() == "linux"
+    Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+endif
 let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
@@ -292,4 +322,4 @@ map <C-F8> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 cmap w!! w !sudo tee % > /dev/null
 
 " :sus切换至后台
-" 
+
