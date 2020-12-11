@@ -83,7 +83,7 @@ set tabstop =4              " 设定 tab 长度为 4
 
 set tags+=./tags;,tags            " 导入索引文件
 "set tags+=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/tags    " Qt的头文件
-set tags+=/home/lifan/Qt5.12.2/5.12.2/gcc_64/tags
+"set tags+=/home/lifan/Qt5.12.2/5.12.2/gcc_64/tags
 " modifyOtherKeys模式下需要识别转义
 let &t_TI = ""
 let &t_TE = ""
@@ -149,7 +149,7 @@ let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
 
 " 自动生产tags
 Plug 'ludovicchabant/vim-gutentags'
-let g:gutentags_project_root = ['.root', '.svn', '.git', '.project', '.pro']
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.project', '.pro', 'local_ver_build.sh']
 let g:gutentags_ctags_tagfile = '.tags'
 let s:vim_tags = expand('$HOME/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
@@ -276,6 +276,9 @@ Plug 'fedorenchik/qt-support.vim'
 " 文件头跳转支持
 Plug 'vim-scripts/a.vim'
 map <F4> :A<CR>
+
+" 书签显示 
+Plug 'kshenoy/vim-signature'
 
 " swp文件选项插件
 Plug 'chrisbra/Recover.vim'
