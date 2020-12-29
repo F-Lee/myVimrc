@@ -204,16 +204,24 @@ else
     Plug 'Shougo/deoplete.nvim'
     Plug 'roxma/nvim-yarp'             " vim8需要
     Plug 'roxma/vim-hug-neovim-rpc'    " vim8需要
-    Plug 'Shougo/deoplete-clangx'
-    Plug 'Shougo/neoinclude.vim'
-    Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode:go get -u github.com/stamblerre/gocode
-    "Plug 'wokalski/autocomplete-flow'
-    Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 endif
 let g:deoplete#enable_at_startup = 1
+" nvim-yarp要求python3的路径
+if MySys() == "windows"                
+    let g:python3_host_prog='D:/Soft/Python38/python.exe'
+endif
+
+" deopleted的补全插件
+Plug 'Shougo/deoplete-clangx'
+Plug 'Shougo/neoinclude.vim'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode
 let g:deoplete#sources#go#gocode_binary = '$HOME/go/bin/gocode'
 set completeopt-=preview
-autocmd CompleteDone * silent! pclose!
+"autocmd CompleteDone * silent! pclose!
+
+" js补全与语法检查
+"Plug 'wokalski/autocomplete-flow' " js补全与语法检查
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' } " 使用全局的tern，需要在项目目录下有.tern-project
 " 添加ternjs补全的文件类型
 let g:deoplete#sources#ternjs#filetypes = [
                 \ 'jsx',
@@ -223,11 +231,9 @@ let g:deoplete#sources#ternjs#filetypes = [
                 \ 'htm',
                 \ '...'
                 \ ]
-
-" nvim-yarp要求python3的路径
-if MySys() == "windows"                
-    let g:python3_host_prog='D:/Soft/Python38/python.exe'
-endif
+let g:deoplete#sources#ternjs#case_insensitive = 1 " 不区分大小写
+let g:deoplete#sources#ternjs#depths = 1 
+let g:deoplete#sources#ternjs#types = 1
 
 " 片段补全
 Plug 'Shougo/neosnippet.vim'
@@ -240,6 +246,8 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 Plug 'mattn/emmet-vim'
 Plug 'othree/html5.vim'
 Plug 'posva/vim-vue'
+"Plug 'alvan/vim-closetag'
+Plug 'tpope/vim-surround' " 自动ds、cs、ys符号增删改
 
 " CSS插件
 Plug 'hail2u/vim-css3-syntax'
