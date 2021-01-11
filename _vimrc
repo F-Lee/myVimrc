@@ -61,7 +61,7 @@ set nofoldenable                " 先关闭折叠
 nmap <C-E><C-E> zi
 
 " 感谢jj
-imap jj <esc> 
+imap jj <esc>
 imap kk <C-y>
 imap <C-X><C-X> <C-X><C-O>
 "inoremap " ""<ESC>i
@@ -72,7 +72,7 @@ nmap <F12> :bn<CR>
 
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
-set rnu                     " 相对行号 
+set rnu                     " 相对行号
 set cursorline             " 突出显示当前行
 set ruler                   " 打开状态栏标尺
 
@@ -159,6 +159,8 @@ endif
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_exclude_wildignore = 1
+let g:gutentags_ctags_exclude = ['node_modules']
 
 " 函数符号
 Plug 'majutsushi/tagbar'
@@ -173,19 +175,19 @@ let g:tagbar_width=30                    "窗口宽度的设置
 map <F10> :Tagbar<CR>
 "autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()     "如果是c语言的程序的话，tagbar自动开启
 
-" 文件管理 
+" 文件管理
 Plug 'scrooloose/nerdtree'
 let NERDTreeWinPos='left'
 let NERDTreeWinSize=30
 map <F9> :NERDTreeToggle<CR>
-nmap ,t :NERDTreeFind<CR> 
+nmap ,t :NERDTreeFind<CR>
 
-" 标签管理 
+" 标签管理
 "Plug 'fholgado/minibufexpl.vim'
-"let g:miniBufExplMapWindowNavVim = 1   
-"let g:miniBufExplMapWindowNavArrows = 1   
-"let g:miniBufExplMapCTabSwitchBufs = 1   
-"let g:miniBufExplModSelTarget = 1  
+"let g:miniBufExplMapWindowNavVim = 1
+"let g:miniBufExplMapWindowNavArrows = 1
+"let g:miniBufExplMapCTabSwitchBufs = 1
+"let g:miniBufExplModSelTarget = 1
 "let g:miniBufExplMoreThanOne=0
 "map <F11> :MBEbp<CR>
 "map <F12> :MBEbn<CR>
@@ -207,7 +209,7 @@ else
 endif
 let g:deoplete#enable_at_startup = 1
 " nvim-yarp要求python3的路径
-if MySys() == "windows"                
+if MySys() == "windows"
     let g:python3_host_prog='D:/Soft/Python38/python.exe'
 endif
 
@@ -232,7 +234,7 @@ let g:deoplete#sources#ternjs#filetypes = [
                 \ '...'
                 \ ]
 let g:deoplete#sources#ternjs#case_insensitive = 1 " 不区分大小写
-let g:deoplete#sources#ternjs#depths = 1 
+let g:deoplete#sources#ternjs#depths = 1
 let g:deoplete#sources#ternjs#types = 1
 
 " 片段补全
@@ -285,8 +287,11 @@ Plug 'fedorenchik/qt-support.vim'
 Plug 'vim-scripts/a.vim'
 map <F4> :A<CR>
 
-" 书签显示 
+" 书签显示
 Plug 'kshenoy/vim-signature'
+
+" 多行编辑
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 " swp文件选项插件
 Plug 'chrisbra/Recover.vim'
@@ -304,6 +309,10 @@ let g:Lf_ShowDevIcons = 0
 let g:Lf_StlColorscheme= 'powerline'
 "let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 let g:Lf_StlSeparator = { 'left': '', 'right': '' }
+let g:Lf_WildIgnore = {
+    \ 'dir': ['.svn', '.git', '.hg', 'node_modules'],
+    \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+    \ }
 noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
 noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
