@@ -77,11 +77,11 @@ set cursorline             " 突出显示当前行
 set ruler                   " 打开状态栏标尺
 
 set expandtab               " tab转空格，如果需要tab则为ctrl+v
-set shiftwidth =4           " 设定 << 和 >> 命令移动时的宽度为 4
-set softtabstop =4          " 使得按退格键时可以一次删掉 4 个空格
-set tabstop =4              " 设定 tab 长度为 4
+set shiftwidth=4           " 设定 << 和 >> 命令移动时的宽度为 4
+set softtabstop=4          " 使得按退格键时可以一次删掉 4 个空格
+set tabstop=4              " 设定 tab 长度为 4
 
-set tags+=./tags;,tags            " 导入索引文件
+set tags+=./tags;            " 导入索引文件
 "set tags+=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/tags    " Qt的头文件
 "set tags+=/home/lifan/Qt5.12.2/5.12.2/gcc_64/tags
 " modifyOtherKeys模式下需要识别转义
@@ -153,7 +153,7 @@ let g:gutentags_project_root = ['.root', '.svn', '.git', '.project', '.pro', 'lo
 let g:gutentags_ctags_tagfile = '.tags'
 let s:vim_tags = expand('$HOME/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
-if !isdirectory(s:vim_tags)
+if !isdirectory(s:vim_tags) " 不存在则创建
    silent! call mkdir(s:vim_tags, 'p')
 endif
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
@@ -178,9 +178,11 @@ map <F10> :Tagbar<CR>
 " 文件管理
 Plug 'scrooloose/nerdtree'
 let NERDTreeWinPos='left'
-let NERDTreeWinSize=30
+let NERDTreeWinSize=48
 map <F9> :NERDTreeToggle<CR>
 nmap ,t :NERDTreeFind<CR>
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+            \ quit | endif
 
 " 标签管理
 "Plug 'fholgado/minibufexpl.vim'
@@ -216,7 +218,7 @@ endif
 " deopleted的补全插件
 Plug 'Shougo/deoplete-clangx'
 Plug 'Shougo/neoinclude.vim'
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode, pip3 install --user pynvim
 let g:deoplete#sources#go#gocode_binary = '$HOME/go/bin/gocode'
 set completeopt-=preview
 "autocmd CompleteDone * silent! pclose!
