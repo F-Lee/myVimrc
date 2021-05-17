@@ -151,6 +151,14 @@ let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
 Plug 'ludovicchabant/vim-gutentags'
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.project', '.pro', 'local_ver_build.sh']
 let g:gutentags_ctags_tagfile = '.tags'
+" 同时开启 ctags 和 gtags 支持：
+let g:gutentags_modules = []
+if executable('ctags')
+	let g:gutentags_modules += ['ctags']
+endif
+"if executable('gtags-cscope') && executable('gtags')
+	"let g:gutentags_modules += ['gtags_cscope']
+"endif
 let s:vim_tags = expand('$HOME/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
 if !isdirectory(s:vim_tags) " 不存在则创建
@@ -159,8 +167,14 @@ endif
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
 let g:gutentags_ctags_exclude = ['node_modules']
+" 禁用 gutentags 自动加载 gtags 数据库的行为
+let g:gutentags_auto_add_gtags_cscope = 0
+" 使gtags正常工作
+"let $GTAGSLABEL = 'native-pygments'
+"let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 
 " 函数符号
 Plug 'majutsushi/tagbar'
@@ -183,6 +197,9 @@ map <F9> :NERDTreeToggle<CR>
 nmap ,t :NERDTreeFind<CR>
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
             \ quit | endif
+
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ryanoasis/vim-devicons'
 
 " 标签管理
 "Plug 'fholgado/minibufexpl.vim'
@@ -218,10 +235,13 @@ endif
 " deopleted的补全插件
 Plug 'Shougo/deoplete-clangx'
 Plug 'Shougo/neoinclude.vim'
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'} " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode, pip3 install --user pynvim
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}  " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode, pip3 install --user pynvim
 let g:deoplete#sources#go#gocode_binary = '$HOME/go/bin/gocode'
 set completeopt-=preview
 "autocmd CompleteDone * silent! pclose!
+
+" python补全，需要先安装pip3 install --user jedi --upgrade
+Plug 'deoplete-plugins/deoplete-jedi'
 
 " js补全与语法检查
 "Plug 'wokalski/autocomplete-flow' " js补全与语法检查
@@ -251,7 +271,9 @@ Plug 'mattn/emmet-vim'
 Plug 'othree/html5.vim'
 Plug 'posva/vim-vue'
 "Plug 'alvan/vim-closetag'
-Plug 'tpope/vim-surround' " 自动ds、cs、ys符号增删改
+
+" 自动ds、cs、ys符号增删改
+Plug 'tpope/vim-surround' 
 
 " CSS插件
 Plug 'hail2u/vim-css3-syntax'
@@ -265,6 +287,12 @@ let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 " 为Flow启用语法突出显示
 let g:javascript_plugin_flow = 1
+
+" 格式美化
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html', 'htm'] }
+" <Leader>p 调用
 
 " Go插件
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
@@ -315,12 +343,21 @@ let g:Lf_WildIgnore = {
     \ 'dir': ['.svn', '.git', '.hg', 'node_modules'],
     \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
     \ }
+let g:Lf_GtagsAutoGenerate = 1
+let g:Lf_Gtagslabel = 'native-pygments'
 noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
 noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 noremap <leader>fs :<C-U><C-R>=printf("Leaderf self %s", "")<CR><CR>
+noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 noremap <C-P> :LeaderfLineAllCword<CR>
+noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
+" CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
 
 " 注释支持
 Plug 'preservim/nerdcommenter'
