@@ -156,6 +156,7 @@ let g:gutentags_modules = []
 if executable('ctags')
 	let g:gutentags_modules += ['ctags']
 endif
+" 注释的原因是因为我现在用leaderf
 "if executable('gtags-cscope') && executable('gtags')
 	"let g:gutentags_modules += ['gtags_cscope']
 "endif
@@ -170,9 +171,9 @@ let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
 let g:gutentags_ctags_exclude = ['node_modules']
-" 禁用 gutentags 自动加载 gtags 数据库的行为
+" 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
 let g:gutentags_auto_add_gtags_cscope = 0
-" 使gtags正常工作
+" 使gtags支持多语言,默认不配就是C/C++/JAVA等
 "let $GTAGSLABEL = 'native-pygments'
 "let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 
@@ -332,6 +333,7 @@ if MySys() == "windows"
 elseif MySys() == "linux"
     Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 endif
+"Plug 'Yggdroot/LeaderF', { 'do': 'LeaderfInstallCExtension' }
 let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
