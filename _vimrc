@@ -172,7 +172,7 @@ let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
 let g:gutentags_ctags_exclude = ['node_modules']
 " 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
-let g:gutentags_auto_add_gtags_cscope = 0
+"let g:gutentags_auto_add_gtags_cscope = 0
 " 使gtags支持多语言,默认不配就是C/C++/JAVA等
 "let $GTAGSLABEL = 'native-pygments'
 "let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
@@ -328,12 +328,12 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'chrisbra/Recover.vim'
 
 " 搜索增强
-if MySys() == "windows"
-    Plug 'Yggdroot/LeaderF', { 'do': '\install.bat' }
-elseif MySys() == "linux"
-    Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-endif
-"Plug 'Yggdroot/LeaderF', { 'do': 'LeaderfInstallCExtension' }
+"if MySys() == "windows"
+    "Plug 'Yggdroot/LeaderF', { 'do': '\install.bat' }
+"elseif MySys() == "linux"
+    "Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+"endif
+Plug 'Yggdroot/LeaderF', { 'do': 'LeaderfInstallCExtension' }
 let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
@@ -360,6 +360,7 @@ noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 noremap <C-P> :LeaderfLineAllCword<CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
+" Leaderf gtags --update 创建符号数据库
 
 " 注释支持
 Plug 'preservim/nerdcommenter'
