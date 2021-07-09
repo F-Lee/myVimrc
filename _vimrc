@@ -83,7 +83,8 @@ set tabstop=4              " 设定 tab 长度为 4
 
 set tags+=./tags;            " 导入索引文件
 "set tags+=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/tags    " Qt的头文件
-"set tags+=/home/lifan/Qt5.12.2/5.12.2/gcc_64/tags
+set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/gcc_64/tags
+set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/android_arm64_v8a/tags
 " modifyOtherKeys模式下需要识别转义
 let &t_TI = ""
 let &t_TE = ""
@@ -138,6 +139,14 @@ set rtp+=$VIMFILES/bundle/gruvbox
 colorscheme gruvbox
 set background=dark
 
+" c++的语法高亮
+"Plug 'octol/vim-cpp-enhanced-highlight'
+"let g:cpp_class_scope_highlight = 1
+"let g:cpp_class_decl_highlight = 1
+"let g:cpp_no_function_highlight = 1
+"let g:cpp_posix_standard = 1
+"let g:cpp_member_variable_highlight = 1
+
 " 增强状态栏
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -177,19 +186,6 @@ let g:gutentags_ctags_exclude = ['node_modules']
 "let $GTAGSLABEL = 'native-pygments'
 "let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 
-" 函数符号
-Plug 'majutsushi/tagbar'
-if MySys() == "windows"                " 设定windows系统中ctags程序的位置
-    let g:tagbar_ctags_bin = '$VIMFILES/ctags/ctags.exe'
-elseif MySys() == "linux"
-    let g:tagbar_ctags_bin = '/usr/bin/ctags'
-endif
-"nmap <Leader>tb :TagbarToggle<CR>        "快捷键设置
-"let g:tagbar_ctags_bin='ctags'            "ctags程序的路径
-let g:tagbar_width=30                    "窗口宽度的设置
-map <F10> :Tagbar<CR>
-"autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()     "如果是c语言的程序的话，tagbar自动开启
-
 " 文件管理
 Plug 'scrooloose/nerdtree'
 let NERDTreeWinPos='left'
@@ -198,19 +194,9 @@ map <F9> :NERDTreeToggle<CR>
 nmap ,t :NERDTreeFind<CR>
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
             \ quit | endif
-
+" 文件管理相关插件
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ryanoasis/vim-devicons'
-
-" 标签管理
-"Plug 'fholgado/minibufexpl.vim'
-"let g:miniBufExplMapWindowNavVim = 1
-"let g:miniBufExplMapWindowNavArrows = 1
-"let g:miniBufExplMapCTabSwitchBufs = 1
-"let g:miniBufExplModSelTarget = 1
-"let g:miniBufExplMoreThanOne=0
-"map <F11> :MBEbp<CR>
-"map <F12> :MBEbn<CR>
 
 " 自动补全括号
 Plug 'jiangmiao/auto-pairs'
@@ -228,6 +214,7 @@ else
     Plug 'roxma/vim-hug-neovim-rpc'    " vim8需要
 endif
 let g:deoplete#enable_at_startup = 1
+
 " nvim-yarp要求python3的路径
 if MySys() == "windows"
     let g:python3_host_prog='D:/Soft/Python38/python.exe'
@@ -376,6 +363,10 @@ filetype plugin indent on    " 必须 加载vim自带和插件相应的语法和
 " :PlugInstall    - 安装插件,追加 `!` 用以更新或使用 :PluginUpdate
 " :PlugSearch foo - 搜索 foo ; 追加 `!` 清除本地缓存
 " :PlugClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件
+
+" 函数调用需要在plug#end()之后
+call deoplete#custom#option('ignore_sources', {'cpp': ['around', 'buffer', 'member']})
+call deoplete#custom#source('_', 'smart_case', v:true)
 
 " 生成tags
 map <C-F8> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
