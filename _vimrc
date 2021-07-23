@@ -45,16 +45,21 @@ endfunction
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-"colorscheme atom-dark-256     " 主题
 set go=                      " 关闭GVIM菜单
 autocmd GUIEnter * simalt ~x
 set fileencodings=utf-8,gb2312,gbk,gb18030,big5  " 文件编码
 set encoding=utf-8   " 文本编码
 set guifont=Consolas:h13:b:cDEFAULT
-set t_Co=256
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
 "set pyxversion=3
+
+" 现在vim8已经支持24bit真色彩
+if has("termguicolors")
+    set termguicolors
+else
+    set t_Co=256
+endif
 
 set fdm=indent                  " 启用indent折叠模式
 set nofoldenable                " 先关闭折叠
@@ -83,7 +88,7 @@ set tabstop=4              " 设定 tab 长度为 4
 
 set tags+=./tags;            " 导入索引文件
 "set tags+=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/tags    " Qt的头文件
-set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/gcc_64/tags
+"set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/gcc_64/tags
 set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/android_arm64_v8a/tags
 " modifyOtherKeys模式下需要识别转义
 let &t_TI = ""
@@ -136,16 +141,19 @@ call plug#begin('$VIMFILES/bundle/') " 开始并指定插件存放目录
 " 主题颜色
 Plug 'morhetz/gruvbox'
 set rtp+=$VIMFILES/bundle/gruvbox
+let g:gruvbox_invert_selection = 0 
+let g:gruvbox_italic = 1 
+let g:gruvbox_italicize_strings = 1
 colorscheme gruvbox
 set background=dark
 
 " c++的语法高亮
-"Plug 'octol/vim-cpp-enhanced-highlight'
-"let g:cpp_class_scope_highlight = 1
-"let g:cpp_class_decl_highlight = 1
-"let g:cpp_no_function_highlight = 1
-"let g:cpp_posix_standard = 1
-"let g:cpp_member_variable_highlight = 1
+Plug 'octol/vim-cpp-enhanced-highlight'
+let g:cpp_class_scope_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_no_function_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_member_variable_highlight = 1
 
 " 增强状态栏
 Plug 'bling/vim-airline'
@@ -200,12 +208,9 @@ Plug 'ryanoasis/vim-devicons'
 
 " 自动补全括号
 Plug 'jiangmiao/auto-pairs'
+let g:AutoPairsMapBS = 0 " 关掉删除时自动删一对
 
 " 自动补全
-"Plug 'Shougo/neocomplete.vim'
-"let g:neocomplete#enable_at_startup = 1
-
-" 自动补全2
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
 else
