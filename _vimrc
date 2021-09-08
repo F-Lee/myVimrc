@@ -175,10 +175,12 @@ if executable('ctags')
 endif
 " 注释的原因是因为我现在用leaderf
 "if executable('gtags-cscope') && executable('gtags')
-	"let g:gutentags_modules += ['gtags_cscope']
+    "let g:gutentags_modules += ['gtags_cscope']
 "endif
 let s:vim_tags = expand('$HOME/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
+"let g:Lf_CacheDirectory = expand('~')
+"let g:gutentags_cache_dir = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
 if !isdirectory(s:vim_tags) " 不存在则创建
    silent! call mkdir(s:vim_tags, 'p')
 endif
@@ -189,7 +191,7 @@ let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
 let g:gutentags_ctags_exclude = ['node_modules']
 " 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
-"let g:gutentags_auto_add_gtags_cscope = 0
+"let g:gutentags_auto_add_gtags_cscope = 1
 " 使gtags支持多语言,默认不配就是C/C++/JAVA等
 "let $GTAGSLABEL = 'native-pygments'
 "let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
@@ -346,6 +348,7 @@ noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
 noremap <leader>fs :<C-U><C-R>=printf("Leaderf self %s", "")<CR><CR>
 noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fg :<C-U><C-R>=printf("Leaderf! gtags --by-context --auto-jump")<CR><CR>
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
@@ -359,7 +362,7 @@ Plug 'preservim/nerdcommenter'
 
 " 你的所有插件需要在下面这行之前
 call plug#end()            " 必须
-filetype plugin indent on    " 必须 加载vim自带和插件相应的语法和文件类型相关脚本
+filetype plugin indent on    " 必须 打开文件类型检测，加载vim自带和插件相应的语法和文件类型相关脚本
 " 忽视插件改变缩进,可以使用以下替代:
 "filetype plugin on
 "
