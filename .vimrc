@@ -49,8 +49,7 @@ set go=                      " 关闭GVIM菜单
 autocmd GUIEnter * simalt ~x
 set fileencodings=utf-8,gb2312,gbk,gb18030,big5  " 文件编码
 set encoding=utf-8   " 文本编码
-"set guifont=Consolas:h13:b:cDEFAULT
-set guifont=NotoMono\ NF:h11:b:cDEFAULT
+set guifont=Consolas:h13:b:cDEFAULT
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
 "set pyxversion=3
