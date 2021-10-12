@@ -159,6 +159,8 @@ let g:cpp_member_variable_highlight = 1
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#lsp#enabled = 1
+"let g:airline#extensions#syntastic#enabled = 1
 "let g:airline_theme = 'powerlineish'
 let g:airline_theme = 'gruvbox'
 let g:airline_powerline_fonts = 1   " 使用powerline打过补丁的字体
@@ -229,7 +231,25 @@ if MySys() == "windows"
     let g:python3_host_prog='D:/Soft/Python/Python39-32/python.exe'
 endif
 
-" deopleted的补全插件
+" deopleted的LSP
+Plug 'prabirshrestha/vim-lsp'
+Plug 'lighttiger2505/deoplete-vim-lsp'
+"Plug 'mattn/vim-lsp-settings'
+let g:lsp_diagnostics_enabled = 0 "关闭lsp的警告检查
+
+" c++LSP补全
+if (executable('clangd'))
+    augroup LspCPP
+        autocmd!
+        autocmd User lsp_setup call lsp#register_server({
+     \ 'name': 'clangd',
+     \ 'cmd': {server_info->['clangd', '--compile-commands-dir=./build', '--clang-tidy', '--all-scopes-completion', '--log=verbose']},
+     \ 'allowlist': ['c', 'cpp'],
+     \ })
+    augroup END
+endif
+
+" deoplete常用的补全插件
 Plug 'Shougo/deoplete-clangx'
 Plug 'Shougo/neoinclude.vim'
 Plug 'deoplete-plugins/deoplete-go', { 'do': 'make'}  " 需要先下载gocode命令:go get -u github.com/stamblerre/gocode, pip3 install --user pynvim
@@ -284,6 +304,15 @@ let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
 " 为Flow启用语法突出显示
 let g:javascript_plugin_flow = 1
+
+" 语法检查
+"Plug 'vim-syntastic/syntastic'
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_cpp_compiler = 'clang++'
+"let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
 " 格式美化
 Plug 'prettier/vim-prettier', {
@@ -375,8 +404,9 @@ filetype plugin indent on    " 必须 打开文件类型检测，加载vim自带
 " :PlugClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件
 
 " 函数调用需要在plug#end()之后
-call deoplete#custom#option('ignore_sources', {'cpp': ['around', 'buffer', 'member']})
-call deoplete#custom#source('_', 'smart_case', v:true)
+call deoplete#custom#option('ignore_sources', {'cpp': ['around', 'buffer']})
+"call deoplete#custom#option('ignore_sources', {'cpp': ['around', 'buffer', 'member']})
+call deoplete#custom#source('_', 'smart_case', v:true)  " 所有源都支持智能大小写
 
 " 生成tags
 map <C-F8> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
