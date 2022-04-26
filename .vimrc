@@ -52,6 +52,7 @@ set encoding=utf-8   " 文本编码
 set guifont=Consolas:h13:b:cDEFAULT
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
+set mouse=                      " 支持终端的右键菜单
 "set pyxversion=3
 
 " 现在vim8已经支持24bit真色彩
@@ -78,18 +79,17 @@ nmap <F12> :bn<CR>
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
 set rnu                     " 相对行号
-set cursorline             " 突出显示当前行
+set cursorline              " 突出显示当前行
 set ruler                   " 打开状态栏标尺
 
-set expandtab               " tab转空格，如果需要tab则为ctrl+v
+set expandtab              " tab转空格，如果需要tab则先按ctrl+v再输入tab
 set shiftwidth=4           " 设定 << 和 >> 命令移动时的宽度为 4
 set softtabstop=4          " 使得按退格键时可以一次删掉 4 个空格
 set tabstop=4              " 设定 tab 长度为 4
 
-set tags+=./tags;            " 导入索引文件
+set tags+=./.tags;,.tags            " 导入索引文件
 "set tags+=C:/Qt/Qt5.11.1/5.11.1/mingw53_32/tags    " Qt的头文件
-"set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/gcc_64/tags
-set tags+=/home/lifan/Qt/Qt5.12.10/5.12.10/android_arm64_v8a/tags
+"set tags+=/home/lifan/Qt/Qt5.12.12/5.12.12/android_arm64_v8a/tags
 " modifyOtherKeys模式下需要识别转义
 let &t_TI = ""
 let &t_TE = ""
@@ -141,8 +141,8 @@ call plug#begin('$VIMFILES/bundle/') " 开始并指定插件存放目录
 " 主题颜色
 Plug 'morhetz/gruvbox'
 set rtp+=$VIMFILES/bundle/gruvbox
-let g:gruvbox_invert_selection = 0 
-let g:gruvbox_italic = 1 
+let g:gruvbox_invert_selection = 0
+let g:gruvbox_italic = 1
 let g:gruvbox_italicize_strings = 1
 colorscheme gruvbox
 set background=dark
@@ -173,7 +173,7 @@ let g:gutentags_ctags_tagfile = '.tags'
 " 同时开启 ctags 和 gtags 支持：
 let g:gutentags_modules = []
 if executable('ctags')
-	let g:gutentags_modules += ['ctags']
+    let g:gutentags_modules += ['ctags']
 endif
 " 注释的原因是因为我现在用leaderf
 "if executable('gtags-cscope') && executable('gtags')
@@ -195,10 +195,9 @@ let g:gutentags_ctags_exclude = ['node_modules']
 " 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
 "let g:gutentags_auto_add_gtags_cscope = 1
 " 使gtags支持多语言,默认不配就是C/C++/JAVA等
-if MySys() == "windows"
-    let $GTAGSLABEL = 'native-pygments'
-    let $GTAGSCONF = 'D:/Soft/Vim/vim82/share/gtags/gtags.conf'
-endif
+"let $GTAGSLABEL = 'native-pygments'
+"let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
+" 需要 pip3 install pygments  &&  pacman -S global
 
 " 文件管理
 Plug 'scrooloose/nerdtree'
@@ -228,7 +227,7 @@ let g:deoplete#enable_at_startup = 1
 
 " nvim-yarp要求python3的路径
 if MySys() == "windows"
-    let g:python3_host_prog='D:/Soft/Python/Python39-32/python.exe'
+    let g:python3_host_prog='D:/Soft/Python38/python.exe'
 endif
 
 " deopleted的LSP
@@ -236,6 +235,10 @@ Plug 'prabirshrestha/vim-lsp'
 Plug 'lighttiger2505/deoplete-vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
 let g:lsp_diagnostics_enabled = 0 "关闭lsp的警告检查
+let g:lsp_document_code_action_signs_enabled = 0 " 关掉建议
+let g:lsp_document_highlight_enabled = 1
+nmap gr :LspReferences<CR>
+nmap <leader>rn :LspRename<CR>
 
 " c++LSP补全
 if (executable('clangd'))
@@ -248,6 +251,11 @@ if (executable('clangd'))
      \ })
     augroup END
 endif
+
+" quickfix的快速预览，P关闭
+Plug 'skywind3000/vim-preview'
+autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
+autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
 
 " deoplete常用的补全插件
 Plug 'Shougo/deoplete-clangx'
@@ -290,7 +298,7 @@ Plug 'posva/vim-vue'
 "Plug 'alvan/vim-closetag'
 
 " 自动ds、cs、ys符号增删改
-Plug 'tpope/vim-surround' 
+Plug 'tpope/vim-surround'
 
 " CSS插件
 Plug 'hail2u/vim-css3-syntax'
@@ -307,12 +315,13 @@ let g:javascript_plugin_flow = 1
 
 " 语法检查
 "Plug 'vim-syntastic/syntastic'
-"let g:syntastic_always_populate_loc_list = 1
+""let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
-"let g:syntastic_cpp_compiler = 'clang++'
-"let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+"let g:syntastic_cpp_checkers = ['clang_tidy']
+"let g:syntastic_cpp_clang_tidy_post_args = ""
+"let g:syntastic_cpp_clang_tidy_args = ""
 
 " 格式美化
 Plug 'prettier/vim-prettier', {
@@ -353,16 +362,15 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'chrisbra/Recover.vim'
 
 " 搜索增强
-"if MySys() == "windows"
-    "Plug 'Yggdroot/LeaderF', { 'do': '\install.bat' }
-"elseif MySys() == "linux"
-    "Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-"endif
 Plug 'Yggdroot/LeaderF', { 'do': 'LeaderfInstallCExtension' }
 let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_ShowDevIcons = 0
+"set ambiwidth=double
+let g:Lf_PreviewInPopup = 1
+"let g:Lf_WindowPosition = 'popup'
+let g:Lf_PopupColorscheme = 'gruvbox_default'
 let g:Lf_StlColorscheme= 'powerline'
 "let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 let g:Lf_StlSeparator = { 'left': '', 'right': '' }
@@ -386,7 +394,7 @@ noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 noremap <C-P> :LeaderfLineAllCword<CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
-" Leaderf gtags --update 创建符号数据库
+" Leaderf gtags --update 手动创建符号数据库
 
 " 注释支持
 Plug 'preservim/nerdcommenter'
