@@ -75,6 +75,7 @@ imap <C-X><C-X> <C-X><C-O>
 "inoremap { {<CR>}<ESC>O<TAB>
 nmap <F11> :bp<CR>
 nmap <F12> :bn<CR>
+nmap sn :noh<CR>
 
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
@@ -302,7 +303,7 @@ Plug 'tpope/vim-surround'
 
 " CSS插件
 Plug 'hail2u/vim-css3-syntax'
-Plug 'ap/vim-css-color'
+"Plug 'ap/vim-css-color'
 
 " JavaScript支持插件
 Plug 'pangloss/vim-javascript'
@@ -398,6 +399,11 @@ noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR
 
 " 注释支持
 Plug 'preservim/nerdcommenter'
+
+" 快速检索移动
+Plug 'easymotion/vim-easymotion'
+nmap ss <Plug>(easymotion-sn)
+nmap s2 <Plug>(easymotion-s2)
 
 " 你的所有插件需要在下面这行之前
 call plug#end()            " 必须
