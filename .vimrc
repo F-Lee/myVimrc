@@ -404,6 +404,7 @@ Plug 'preservim/nerdcommenter'
 Plug 'easymotion/vim-easymotion'
 nmap ss <Plug>(easymotion-sn)
 nmap s2 <Plug>(easymotion-s2)
+let g:EasyMotion_add_search_history = 0 " 不添加到搜索，避免高亮
 
 " 你的所有插件需要在下面这行之前
 call plug#end()            " 必须
