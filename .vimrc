@@ -406,6 +406,11 @@ nmap ss <Plug>(easymotion-sn)
 nmap s2 <Plug>(easymotion-s2)
 let g:EasyMotion_add_search_history = 0 " 不添加到搜索，避免高亮
 
+" Markdown 需要nodejs和yarn
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+Plug 'godlygeek/tabular'
+Plug 'preservim/vim-markdown'
+
 " 你的所有插件需要在下面这行之前
 call plug#end()            " 必须
 filetype plugin indent on    " 必须 打开文件类型检测，加载vim自带和插件相应的语法和文件类型相关脚本
