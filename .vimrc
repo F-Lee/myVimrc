@@ -394,6 +394,7 @@ noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 noremap <C-P> :LeaderfLineAllCword<CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
+noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
 " Leaderf gtags --update 手动创建符号数据库
 
@@ -408,8 +409,11 @@ let g:EasyMotion_add_search_history = 0 " 不添加到搜索，避免高亮
 
 " Markdown 需要nodejs和yarn
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
-Plug 'godlygeek/tabular'
+Plug 'godlygeek/tabular'        " 文本对齐
 Plug 'preservim/vim-markdown'
+let g:mkdp_browser = 'chromium'
+let g:mkdp_theme = 'light'
+nmap <C-F5> :MarkdownPreviewToggle<CR>
 
 " 你的所有插件需要在下面这行之前
 call plug#end()            " 必须
