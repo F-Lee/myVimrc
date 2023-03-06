@@ -76,6 +76,8 @@ imap <C-X><C-X> <C-X><C-O>
 nmap <F11> :bp<CR>
 nmap <F12> :bn<CR>
 nmap sn :noh<CR>
+nmap <leader>ev :split $MYVIMRC<CR>    " 打开配置
+noremap <leader>q :<C-U><C-R>=printf("cclose")<CR><CR>
 
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
@@ -145,6 +147,7 @@ set rtp+=$VIMFILES/bundle/gruvbox
 let g:gruvbox_invert_selection = 0
 let g:gruvbox_italic = 1
 let g:gruvbox_italicize_strings = 1
+" let g:gruvbox_contrast_dark = 'soft'
 colorscheme gruvbox
 set background=dark
 
@@ -235,8 +238,8 @@ endif
 Plug 'prabirshrestha/vim-lsp'
 Plug 'lighttiger2505/deoplete-vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
-let g:lsp_diagnostics_enabled = 0 "关闭lsp的警告检查
-let g:lsp_document_code_action_signs_enabled = 0 " 关掉建议
+let g:lsp_diagnostics_enabled = 1 "关闭lsp的警告检查
+let g:lsp_document_code_action_signs_enabled = 1 " 关掉建议
 let g:lsp_document_highlight_enabled = 1
 nmap gr :LspReferences<CR>
 nmap <leader>rn :LspRename<CR>
@@ -268,6 +271,8 @@ set completeopt-=preview
 
 " python补全，需要先安装pip3 install --user jedi --upgrade
 Plug 'deoplete-plugins/deoplete-jedi'
+" python代码检查 pip3 install --user flake8 --upgrade   F7使用
+Plug 'nvie/vim-flake8'
 
 " js补全与语法检查
 "Plug 'wokalski/autocomplete-flow' " js补全与语法检查
@@ -315,14 +320,7 @@ let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
 
 " 语法检查
-"Plug 'vim-syntastic/syntastic'
-""let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-"let g:syntastic_cpp_checkers = ['clang_tidy']
-"let g:syntastic_cpp_clang_tidy_post_args = ""
-"let g:syntastic_cpp_clang_tidy_args = ""
+Plug 'w0rp/ale'
 
 " 格式美化
 Plug 'prettier/vim-prettier', {
@@ -345,6 +343,10 @@ Plug 'stamblerre/gocode', { 'rtp': 'vim', 'do': '~/.vim/bundle/gocode/vim/symlin
 
 " Git in vim
 Plug 'tpope/vim-fugitive'
+" 显示Git日志
+Plug 'APZelos/blamer.nvim'
+" let g:blamer_enabled = 1 "或者:BlamerToggle触发
+let g:blamer_show_in_insert_modes = 0
 
 " qt支持插件
 Plug 'fedorenchik/qt-support.vim'
@@ -363,14 +365,14 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'chrisbra/Recover.vim'
 
 " 搜索增强
-Plug 'Yggdroot/LeaderF', { 'do': 'LeaderfInstallCExtension' }
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
-let g:Lf_ShowDevIcons = 0
+let g:Lf_ShowDevIcons = 1
 "set ambiwidth=double
 let g:Lf_PreviewInPopup = 1
-"let g:Lf_WindowPosition = 'popup'
+let g:Lf_WindowPosition = 'popup'
 let g:Lf_PopupColorscheme = 'gruvbox_default'
 let g:Lf_StlColorscheme= 'powerline'
 "let g:Lf_StlSeparator = { 'left': '', 'right': '' }
@@ -392,7 +394,8 @@ noremap <leader>fg :<C-U><C-R>=printf("Leaderf! gtags --by-context --auto-jump")
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
-noremap <C-P> :LeaderfLineAllCword<CR>
+"noremap <C-P> :LeaderfLineAllCword<CR>
+noremap <C-P> :<C-U><C-R>=printf("Leaderf --recall")<CR><CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
 noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
