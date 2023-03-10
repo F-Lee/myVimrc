@@ -108,6 +108,8 @@ set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以�
 "set novisualbell            " 关闭使用可视响铃代替呼叫
 
 set laststatus=2            " 总是显示状态栏
+"set clipboard+=unnamed
+"set clipboard+=unnamedplus
 
 set undodir=$HOME/.undodir
 "let mapleader=","
@@ -238,8 +240,8 @@ endif
 Plug 'prabirshrestha/vim-lsp'
 Plug 'lighttiger2505/deoplete-vim-lsp'
 "Plug 'mattn/vim-lsp-settings'
-let g:lsp_diagnostics_enabled = 1 "关闭lsp的警告检查
-let g:lsp_document_code_action_signs_enabled = 1 " 关掉建议
+let g:lsp_diagnostics_enabled = 0 "关闭lsp的警告检查
+let g:lsp_document_code_action_signs_enabled = 0 " 关掉建议
 let g:lsp_document_highlight_enabled = 1
 nmap gr :LspReferences<CR>
 nmap <leader>rn :LspRename<CR>
@@ -320,7 +322,24 @@ let g:javascript_plugin_ngdoc = 1
 let g:javascript_plugin_flow = 1
 
 " 语法检查
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
+Plug 'rhysd/vim-lsp-ale'
+let g:ale_linters = {
+            \    'c++': ['vim-lsp'],
+            \    'c': ['vim-lsp']
+            \}
+let g:ale_fixers = ['clangtidy']
+let g:airline#extensions#ale#enabled = 1
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_disable_lsp = 1
+let g:ale_floating_preview = 0 "是否以浮窗显示
+let g:ale_set_highlights = 0
+let g:ale_list_window_size = 1
+nmap <leader>sp <Plug>(ale_previous_wrap)
+nmap <leader>sn <Plug>(ale_next_wrap)
+nmap <leader>d <Plug>(ale_detail)
 
 " 格式美化
 Plug 'prettier/vim-prettier', {
@@ -441,5 +460,5 @@ map <C-F8> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 " 强制保存只读
 cmap w!! w !sudo tee % > /dev/null
 
-" :sus切换至后台
+" :sus切换至后台 fg切回来
 
