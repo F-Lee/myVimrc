@@ -333,10 +333,10 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚡'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_disable_lsp = 1
+let g:ale_disable_lsp = 1 "关闭ale本身的lsp
 let g:ale_floating_preview = 0 "是否以浮窗显示
 let g:ale_set_highlights = 0
-let g:ale_list_window_size = 1
+let g:ale_virtualtext_cursor = 1 "只有在光标移动到才显示详细信息
 nmap <leader>sp <Plug>(ale_previous_wrap)
 nmap <leader>sn <Plug>(ale_next_wrap)
 nmap <leader>d <Plug>(ale_detail)
