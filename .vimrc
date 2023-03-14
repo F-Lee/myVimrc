@@ -389,6 +389,7 @@ let g:Lf_ShortcutF = '<leader>ff'
 let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
 let g:Lf_WorkingDirectoryMode = 'Ac'
 let g:Lf_ShowDevIcons = 1
+let g:Lf_PopupWidth = 0.75
 "set ambiwidth=double
 let g:Lf_PreviewInPopup = 1
 let g:Lf_WindowPosition = 'popup'
@@ -415,8 +416,8 @@ noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 "noremap <C-P> :LeaderfLineAllCword<CR>
 noremap <C-P> :<C-U><C-R>=printf("Leaderf --recall")<CR><CR>
-noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR><CR>
-noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg -e ")<CR>
+noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg --heading -e %s ", expand("<cword>"))<CR><CR>
+noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg --heading -e ")<CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
 " Leaderf gtags --update 手动创建符号数据库
 
