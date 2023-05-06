@@ -398,8 +398,8 @@ let g:Lf_StlColorscheme= 'powerline'
 "let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 let g:Lf_StlSeparator = { 'left': '', 'right': '' }
 let g:Lf_WildIgnore = {
-    \ 'dir': ['.svn', '.git', '.hg', 'node_modules', 'build-*'],
-    \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+    \ 'dir': ['.svn', '.git', '.hg', 'node_modules', 'build-*', 'Web'],
+    \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]','*.d']
     \ }
 let g:Lf_GtagsAutoGenerate = 1
 let g:Lf_Gtagslabel = 'native-pygments'
