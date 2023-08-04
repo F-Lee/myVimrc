@@ -47,13 +47,12 @@ filetype off                  " required
 
 set go=                      " 关闭GVIM菜单
 autocmd GUIEnter * simalt ~x
-set fileencodings=utf-8,gb2312,gbk,gb18030,big5  " 文件编码
-set encoding=utf-8   " 文本编码
+set fileencodings=utf-8,gb2312,gbk,gb18030,big5  " 文件编码探测，按探测到的设置本次文件fileenconding
+set encoding=utf-8   " 软件本身编码
 set guifont=Consolas:h13:b:cDEFAULT
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
 set mouse=                      " 支持终端的右键菜单
-"set pyxversion=3
 
 " 现在vim8已经支持24bit真色彩
 if has("termguicolors")
@@ -62,7 +61,8 @@ else
     set t_Co=256
 endif
 
-set fdm=indent                  " 启用indent折叠模式
+"set fdm=indent                  " 启用indent折叠模式
+set fdm=syntax                  " 启用indent折叠模式
 set nofoldenable                " 先关闭折叠
 nmap <C-E><C-E> zi
 
@@ -78,6 +78,7 @@ nmap <F12> :bn<CR>
 nmap sn :noh<CR>
 nmap <leader>ev :split $MYVIMRC<CR>    " 打开配置
 noremap <leader>q :<C-U><C-R>=printf("cclose")<CR><CR>
+vnoremap <C-y> "+y
 
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
@@ -97,7 +98,9 @@ set tags+=./.tags;,.tags            " 导入索引文件
 let &t_TI = ""
 let &t_TE = ""
 
-set autochdir                " 自动切换当前目录为当前文件所在的目录
+"自动切换当前目录为当前文件所在的目录，会导致部分插件错误
+"set autochdir
+
 set nobackup                " 覆盖文件时不备份
 "set backupcopy = yes        " 设置备份时的行为为覆盖
 set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
@@ -181,14 +184,12 @@ let g:gutentags_modules = []
 if executable('ctags')
     let g:gutentags_modules += ['ctags']
 endif
-" 注释的原因是因为我现在用leaderf
+" 注释的原因是因为我现在用leaderf进行gtags的管理，此插件只用作ctags
 "if executable('gtags-cscope') && executable('gtags')
     "let g:gutentags_modules += ['gtags_cscope']
 "endif
 let s:vim_tags = expand('$HOME/.cache/tags')
 let g:gutentags_cache_dir = s:vim_tags
-"let g:Lf_CacheDirectory = expand('~')
-"let g:gutentags_cache_dir = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
 if !isdirectory(s:vim_tags) " 不存在则创建
    silent! call mkdir(s:vim_tags, 'p')
 endif
@@ -199,7 +200,7 @@ let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
 let g:gutentags_ctags_exclude = ['node_modules']
 " 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
-"let g:gutentags_auto_add_gtags_cscope = 1
+let g:gutentags_auto_add_gtags_cscope = 0
 " 使gtags支持多语言,默认不配就是C/C++/JAVA等
 "let $GTAGSLABEL = 'native-pygments'
 "let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
@@ -243,8 +244,13 @@ Plug 'lighttiger2505/deoplete-vim-lsp'
 let g:lsp_diagnostics_enabled = 0 "关闭lsp的警告检查
 let g:lsp_document_code_action_signs_enabled = 0 " 关掉建议
 let g:lsp_document_highlight_enabled = 1
-nmap gr :LspReferences<CR>
-nmap <leader>rn :LspRename<CR>
+nmap <leader>gr <plug>(lsp-references)
+nmap <leader>gd <plug>(lsp-definition)
+nmap <leader>gt <plug>(lsp-type-definition)
+nmap <leader>gi <plug>(lsp-implementation)
+nmap <leader>rn <plug>(lsp-rename)
+nmap <leader>kk <plug>(lsp-hover)
+xmap <C-I> <plug>(lsp-document-range-format)
 
 " c++LSP补全
 if (executable('clangd'))
@@ -295,9 +301,9 @@ let g:deoplete#sources#ternjs#types = 1
 " 片段补全
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+imap <C-k>  <Plug>(neosnippet_expand_or_jump)
+smap <C-k>  <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>  <Plug>(neosnippet_expand_target)
 
 " html插件
 Plug 'mattn/emmet-vim'
@@ -386,12 +392,25 @@ Plug 'chrisbra/Recover.vim'
 " 搜索增强
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 let g:Lf_ShortcutF = '<leader>ff'
-let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod']
+let g:Lf_RootMarkers = ['.project', '.root', '.git', '.svn', '.pro', 'go.mod', 'local_ver_build.sh']
 let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0 " 避免不更新列表
 let g:Lf_ShowDevIcons = 1
-let g:Lf_PopupWidth = 0.75
-"set ambiwidth=double
+let g:Lf_PopupWidth = 0.5
 let g:Lf_PreviewInPopup = 1
+let g:Lf_PreviewResult = {
+        \ 'File': 0,
+        \ 'Buffer': 0,
+        \ 'Mru': 0,
+        \ 'Tag': 0,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 0,
+        \ 'Colorscheme': 0,
+        \ 'Rg': 0,
+        \ 'Gtags': 0
+        \}
 let g:Lf_WindowPosition = 'popup'
 let g:Lf_PopupColorscheme = 'gruvbox_default'
 let g:Lf_StlColorscheme= 'powerline'
@@ -414,10 +433,10 @@ noremap <leader>fg :<C-U><C-R>=printf("Leaderf! gtags --by-context --auto-jump")
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
-"noremap <C-P> :LeaderfLineAllCword<CR>
 noremap <C-P> :<C-U><C-R>=printf("Leaderf --recall")<CR><CR>
+xnoremap gf :<C-U><C-R>=printf("Leaderf! rg --heading -F -e %s ", leaderf#Rg#visual())<CR>
 noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg --heading -e %s ", expand("<cword>"))<CR><CR>
-noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg --heading -e ")<CR>
+noremap <S-F> :<C-U><C-R>=printf("Leaderf! rg --heading -F -e ")<CR>
 " CWord 就是指指针下的单词，和在命令行按下C-R C-W是一样的效果
 " Leaderf gtags --update 手动创建符号数据库
 
