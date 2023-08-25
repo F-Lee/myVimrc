@@ -53,6 +53,7 @@ set guifont=Consolas:h13:b:cDEFAULT
 source $VIMRUNTIME/delmenu.vim  " 菜单和右键菜单编码
 source $VIMRUNTIME/menu.vim     " 菜单和右键菜单编码
 set mouse=                      " 支持终端的右键菜单
+"set selectmode=mouse            " 支持在选择模式下使用鼠标选择
 
 " 现在vim8已经支持24bit真色彩
 if has("termguicolors")
@@ -77,8 +78,8 @@ nmap <F11> :bp<CR>
 nmap <F12> :bn<CR>
 nmap sn :noh<CR>
 nmap <leader>ev :split $MYVIMRC<CR>    " 打开配置
-noremap <leader>q :<C-U><C-R>=printf("cclose")<CR><CR>
 vnoremap <C-y> "+y
+noremap <leader>q :execute "cclose" \| execute "lclose"<CR>
 
 syntax on                   " 自动语法高亮
 set number                  " 显示行号
@@ -198,7 +199,7 @@ let g:gutentags_ctags_extra_args += ['--c++-kinds=+pxI']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 let g:gutentags_ctags_exclude_wildignore = 1
-let g:gutentags_ctags_exclude = ['node_modules']
+let g:gutentags_ctags_exclude = ['node_modules', 'Web']
 " 禁用 gutentags 自动加载 gtags 数据库的行为,避免多项目加入干扰
 let g:gutentags_auto_add_gtags_cscope = 0
 " 使gtags支持多语言,默认不配就是C/C++/JAVA等
