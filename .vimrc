@@ -183,7 +183,7 @@ let g:gutentags_ctags_tagfile = '.tags'
 " 同时开启 ctags 和 gtags 支持：
 let g:gutentags_modules = []
 if executable('ctags')
-    let g:gutentags_modules += ['ctags']
+    "let g:gutentags_modules += ['ctags']
 endif
 " 注释的原因是因为我现在用leaderf进行gtags的管理，此插件只用作ctags
 "if executable('gtags-cscope') && executable('gtags')
