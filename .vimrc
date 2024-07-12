@@ -464,7 +464,7 @@ nmap <C-F5> :MarkdownPreviewToggle<CR>
 " 快速代码地图，依赖code-minimap, yay -S code-minimap
 Plug 'wfxr/minimap.vim'
 let g:minimap_width = 10
-let g:minimap_auto_start = 1
+let g:minimap_auto_start = 0    " open minimap
 let g:minimap_auto_start_win_enter = 1
 
 " 你的所有插件需要在下面这行之前
