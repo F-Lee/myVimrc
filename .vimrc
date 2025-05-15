@@ -280,8 +280,6 @@ set completeopt-=preview
 
 " python补全，需要先安装pip3 install --user jedi --upgrade
 Plug 'deoplete-plugins/deoplete-jedi'
-" python代码检查 pip3 install --user flake8 --upgrade   F7使用
-Plug 'nvie/vim-flake8'
 
 " js补全与语法检查
 "Plug 'wokalski/autocomplete-flow' " js补全与语法检查
@@ -336,7 +334,8 @@ Plug 'dense-analysis/ale'
 Plug 'rhysd/vim-lsp-ale'
 let g:ale_linters = {
             \    'c++': ['vim-lsp'],
-            \    'c': ['vim-lsp']
+            \    'c': ['vim-lsp'],
+            \    'python': ['flake8']
             \}
 let g:ale_fixers = ['clangtidy']
 let g:airline#extensions#ale#enabled = 1
@@ -347,6 +346,7 @@ let g:ale_disable_lsp = 1 "关闭ale本身的lsp
 let g:ale_floating_preview = 0 "是否以浮窗显示
 let g:ale_set_highlights = 0
 let g:ale_virtualtext_cursor = 1 "只有在光标移动到才显示详细信息
+let g:ale_python_flake8_executable = 'flake8' "python的代码检查器，需要install先安装 flake8
 nmap <leader>sp <Plug>(ale_previous_wrap)
 nmap <leader>sn <Plug>(ale_next_wrap)
 nmap <leader>d <Plug>(ale_detail)
